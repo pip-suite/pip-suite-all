@@ -61,7 +61,7 @@ gulp.task('build-js-prod', function () {
         '../pip-suite-dashboard/dist/pip-suite-dashboard.min.js',
         '../pip-suite-guidance/dist/pip-suite-guidance.min.js',
         '../pip-suite-support/dist/pip-suite-support.min.js',
-        '../pip-suite-map/dist/pip-suite-map.min.js',
+        '../pip-suite-map/dist/pip-suite-map.js',
         '../pip-suite-tags/dist/pip-suite-tags.min.js'
     ])
     .pipe(sourceMaps.init({ loadMaps: true }))

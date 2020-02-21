@@ -476,53 +476,6 @@ export class PostSignupViewModel {
     onPostSignupSubmit(callback?: () => void): void;
 }
 
-export class ResetPasswordController {
-    private pipResetPasswordViewModel;
-    private $window;
-    constructor(pipResetPasswordViewModel: ResetPasswordViewModel, pipEntryCommon: IEntryCommonService, $window: ng.IWindowService);
-    goBack(): void;
-    readonly config: any;
-    onReset(): void;
-}
-
-export interface IResetPasswordDialogService {
-    show(params: any, successCallback?: () => void, cancelCallback?: () => void): void;
-}
-
-export class ResetPasswordModel extends EntryModel {
-    private $rootScope;
-    private $location;
-    private $state;
-    private $injector;
-    private pipAuthState;
-    private pipFormErrors;
-    private pipRest;
-    private pipTranslate;
-    private pipEntryData;
-    private pipToasts;
-    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
-    init($scope: any): void;
-    private setElementVisability();
-    onShowToast(message: string, type: string): void;
-    onReset(callback?: () => void): void;
-}
-
-
-export class ResetPasswordViewModel {
-    private pipTranslate;
-    private pipEntryData;
-    private pipToasts;
-    model: ResetPasswordModel;
-    constructor(pipEntryCommon: any, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: any, pipToasts: any);
-    readonly transaction: pip.services.Transaction;
-    readonly hideObject: any;
-    readonly showServerError: any;
-    readonly config: any;
-    initModel($scope: any): void;
-    onShowToast(message: any, type: any): void;
-    onReset(callback?: () => void): void;
-}
-
 export class RecoverPasswordController {
     private $scope;
     private pipRecoverPasswordViewModel;
@@ -572,6 +525,53 @@ export class RecoverPasswordViewModel {
     readonly config: any;
     initModel($scope: any): void;
     onRecover(gotoReset: any): void;
+}
+
+export class ResetPasswordController {
+    private pipResetPasswordViewModel;
+    private $window;
+    constructor(pipResetPasswordViewModel: ResetPasswordViewModel, pipEntryCommon: IEntryCommonService, $window: ng.IWindowService);
+    goBack(): void;
+    readonly config: any;
+    onReset(): void;
+}
+
+export interface IResetPasswordDialogService {
+    show(params: any, successCallback?: () => void, cancelCallback?: () => void): void;
+}
+
+export class ResetPasswordModel extends EntryModel {
+    private $rootScope;
+    private $location;
+    private $state;
+    private $injector;
+    private pipAuthState;
+    private pipFormErrors;
+    private pipRest;
+    private pipTranslate;
+    private pipEntryData;
+    private pipToasts;
+    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
+    init($scope: any): void;
+    private setElementVisability();
+    onShowToast(message: string, type: string): void;
+    onReset(callback?: () => void): void;
+}
+
+
+export class ResetPasswordViewModel {
+    private pipTranslate;
+    private pipEntryData;
+    private pipToasts;
+    model: ResetPasswordModel;
+    constructor(pipEntryCommon: any, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: any, pipToasts: any);
+    readonly transaction: pip.services.Transaction;
+    readonly hideObject: any;
+    readonly showServerError: any;
+    readonly config: any;
+    initModel($scope: any): void;
+    onShowToast(message: any, type: any): void;
+    onReset(callback?: () => void): void;
 }
 
 function configEntryResources(pipRestProvider: pip.rest.IRestProvider): void;
@@ -975,6 +975,13 @@ export class PictureUploadErrors {
     name: string;
 }
 
+function configAvatarResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+function configImageSetResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+
+function configPictureResources(pipRestProvider: pip.rest.IRestProvider): void;
+
 
 export interface IPictureUrlDialogService {
     show(successCallback?: (result: string) => void, cancelCallback?: () => void): any;
@@ -999,13 +1006,6 @@ class PictureUrlDialogController {
     onAddClick(): void;
 }
 
-
-function configAvatarResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-function configImageSetResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-
-function configPictureResources(pipRestProvider: pip.rest.IRestProvider): void;
 
 
 export class imageCssParams {
@@ -1375,13 +1375,6 @@ export interface IQuotesService {
 }
 
 
-function pipGuideDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
-
-
-function configQuoteResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-function pipTipDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
-
 export interface ITipsService {
     filterTips(data: any[], topic: string): any[];
     showTips(tips: any[], ln: string, $event?: any): void;
@@ -1389,6 +1382,13 @@ export interface ITipsService {
     getTips(party: any, ln: string, topic: string, callback?: (...args) => void): any;
 }
 
+
+function pipGuideDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
+
+
+function configQuoteResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+function pipTipDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
 
 }
 
