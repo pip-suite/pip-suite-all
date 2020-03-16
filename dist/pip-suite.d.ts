@@ -1,5 +1,42 @@
 declare module pip.rest {
 
+export const UnauthorizedRedirect: string;
+export const AccessDenyRedirect: string;
+
+
+
+
+export interface IAuthState extends angular.ui.IState {
+    auth?: boolean;
+    authenticate?: any;
+}
+export class AuthStateConfig {
+    signinState: string;
+    signoutState: string;
+    authorizedState: string;
+    unauthorizedState: string;
+}
+export interface IAuthStateService extends ng.ui.IStateService {
+    signinState(value?: string): string;
+    signoutState(value?: string): string;
+    authorizedState(value?: string): string;
+    unauthorizedState(value?: string): string;
+    redirect(event: ng.IAngularEvent, toState: IAuthState, toParams: any, $rootScope: ng.IRootScopeService): any;
+    state(stateName: string, stateConfig: IAuthState): any;
+    goToSignin(params: any): void;
+    goToSignout(params: any): void;
+    goToAuthorized(params: any): void;
+    goToUnauthorized(params: any): void;
+}
+export interface IAuthStateProvider extends ng.IServiceProvider {
+    redirect(fromState: string, toState: string): any;
+    signinState: string;
+    signoutState: string;
+    authorizedState: string;
+    unauthorizedState: string;
+}
+
+
 
 export class CacheParams {
     force?: boolean;
@@ -69,43 +106,6 @@ export interface IRestProvider {
     registerCollection(name: string, path: string, defaultParams?: any, actions?: any): void;
     registerPagedCollection(name: string, path: string, defaultParams?: any, actions?: any): void;
     registerPartyCollection(name: string, path: string, defaultParams?: any, actions?: any): void;
-}
-
-
-export const UnauthorizedRedirect: string;
-export const AccessDenyRedirect: string;
-
-
-
-
-export interface IAuthState extends angular.ui.IState {
-    auth?: boolean;
-    authenticate?: any;
-}
-export class AuthStateConfig {
-    signinState: string;
-    signoutState: string;
-    authorizedState: string;
-    unauthorizedState: string;
-}
-export interface IAuthStateService extends ng.ui.IStateService {
-    signinState(value?: string): string;
-    signoutState(value?: string): string;
-    authorizedState(value?: string): string;
-    unauthorizedState(value?: string): string;
-    redirect(event: ng.IAngularEvent, toState: IAuthState, toParams: any, $rootScope: ng.IRootScopeService): any;
-    state(stateName: string, stateConfig: IAuthState): any;
-    goToSignin(params: any): void;
-    goToSignout(params: any): void;
-    goToAuthorized(params: any): void;
-    goToUnauthorized(params: any): void;
-}
-export interface IAuthStateProvider extends ng.IServiceProvider {
-    redirect(fromState: string, toState: string): any;
-    signinState: string;
-    signoutState: string;
-    authorizedState: string;
-    unauthorizedState: string;
 }
 
 
@@ -427,6 +427,55 @@ export class ExpireChangePasswordViewModel {
     onChange(callback?: () => void): void;
 }
 
+export class PostSignupController implements ng.IController {
+    private $window;
+    $party: any;
+    private pipPostSignupViewModel;
+    $onInit(): void;
+    constructor($window: ng.IWindowService, $party: any, pipPostSignupViewModel: PostSignupViewModel);
+    onPostSignupSubmit(): void;
+    readonly transaction: any;
+}
+
+export interface IPostSignupDialogService {
+    show(params: any, successCallback?: () => void, cancelCallback?: () => void): void;
+}
+
+export class PostSignupModel extends EntryModel {
+    private $rootScope;
+    private $location;
+    private $state;
+    private $injector;
+    private pipErrorPageConfigService;
+    private pipAuthState;
+    private pipFormErrors;
+    private pipEntry;
+    private pipRest;
+    private pipTranslate;
+    private pipEntryData;
+    private pipToasts;
+    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipErrorPageConfigService: pip.errors.IErrorPageConfigService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipEntry: IEntryService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
+    init($scope: any): void;
+    private setElementVisability();
+    private checkSupported();
+    onPostSignupSubmit(callback?: () => void): void;
+}
+
+
+export class PostSignupViewModel {
+    private pipTranslate;
+    private pipEntryData;
+    private pipToasts;
+    model: PostSignupModel;
+    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipErrorPageConfigService: pip.errors.IErrorPageConfigService, pipAuthState: pip.rest.IAuthStateService, pipEntry: IEntryService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
+    readonly transaction: pip.services.Transaction;
+    readonly hideObject: any;
+    readonly showServerError: any;
+    readonly config: any;
+    initModel($scope: any): void;
+    onPostSignupSubmit(callback?: () => void): void;
+}
+
 export class RecoverPasswordController {
     private $scope;
     private pipRecoverPasswordViewModel;
@@ -476,55 +525,6 @@ export class RecoverPasswordViewModel {
     readonly config: any;
     initModel($scope: any): void;
     onRecover(gotoReset: any): void;
-}
-
-export class PostSignupController implements ng.IController {
-    private $window;
-    $party: any;
-    private pipPostSignupViewModel;
-    $onInit(): void;
-    constructor($window: ng.IWindowService, $party: any, pipPostSignupViewModel: PostSignupViewModel);
-    onPostSignupSubmit(): void;
-    readonly transaction: any;
-}
-
-export interface IPostSignupDialogService {
-    show(params: any, successCallback?: () => void, cancelCallback?: () => void): void;
-}
-
-export class PostSignupModel extends EntryModel {
-    private $rootScope;
-    private $location;
-    private $state;
-    private $injector;
-    private pipErrorPageConfigService;
-    private pipAuthState;
-    private pipFormErrors;
-    private pipEntry;
-    private pipRest;
-    private pipTranslate;
-    private pipEntryData;
-    private pipToasts;
-    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipErrorPageConfigService: pip.errors.IErrorPageConfigService, pipAuthState: pip.rest.IAuthStateService, pipFormErrors: pip.errors.IFormErrorsService, pipEntry: IEntryService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
-    init($scope: any): void;
-    private setElementVisability();
-    private checkSupported();
-    onPostSignupSubmit(callback?: () => void): void;
-}
-
-
-export class PostSignupViewModel {
-    private pipTranslate;
-    private pipEntryData;
-    private pipToasts;
-    model: PostSignupModel;
-    constructor(pipEntryCommon: IEntryCommonService, pipTransaction: pip.services.ITransactionService, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $state: ng.ui.IStateService, $injector: ng.auto.IInjectorService, pipErrorPageConfigService: pip.errors.IErrorPageConfigService, pipAuthState: pip.rest.IAuthStateService, pipEntry: IEntryService, pipFormErrors: pip.errors.IFormErrorsService, pipRest: pip.rest.IRestService, pipTranslate: pip.services.ITranslateService, pipEntryData: IEntryDataService, pipToasts: pip.controls.IToastService);
-    readonly transaction: pip.services.Transaction;
-    readonly hideObject: any;
-    readonly showServerError: any;
-    readonly config: any;
-    initModel($scope: any): void;
-    onPostSignupSubmit(callback?: () => void): void;
 }
 
 export class ResetPasswordController {
@@ -748,6 +748,21 @@ export class MobileState {
 declare module pip.pictures {
 
 
+export class AddImageOption {
+    Upload: boolean;
+    WebLink: boolean;
+    Camera: boolean;
+    Galery: boolean;
+}
+
+export class AddImageResult {
+    picture?: Attachment;
+    file?: any;
+    uriData?: any;
+    url?: string;
+}
+
+
 export const ReloadAvatar = "pipReloadAvatar";
 export class AvatarEditControl {
     reset: (afterDeleting?: boolean) => void;
@@ -780,6 +795,7 @@ var Camera: any;
 export interface ICameraDialogService {
     show(successCallback?: (result) => void, cancelCallback?: () => void): any;
 }
+
 
 
 export class Attachment {
@@ -895,31 +911,32 @@ export interface IGallerySearchDialogService {
 
 
 
-
-
-export interface IPictureUrlDialogService {
-    show(successCallback?: (result: string) => void, cancelCallback?: () => void): any;
-}
-
-const ConfigPictureUrlDialogTranslations: (pipTranslateProvider: pip.services.ITranslateProvider) => void;
-class PictureUrlDialogController {
-    private $log;
-    private $scope;
-    private $mdDialog;
-    private $rootScope;
-    private $timeout;
-    private $mdMenu;
-    private pipPictureUtils;
+export class PictureEditControl {
+    reset: (afterDeleting?: boolean) => void;
+    save: (successCallback?: (response?: Attachment) => void, errorCallback?: (error?: any) => void) => void;
+    abort: () => void;
+    error?: any;
+    disabled: boolean;
     url: string;
-    invalid: boolean;
-    theme: string;
-    constructor($log: ng.ILogService, $scope: ng.IScope, $mdDialog: angular.material.IDialogService, $rootScope: ng.IRootScopeService, $timeout: ng.ITimeoutService, $mdMenu: any, pipPictureUtils: any);
-    setImageSize(img: any): void;
-    checkUrl(): void;
-    onCancelClick(): void;
-    onAddClick(): void;
+    uriData: any;
+    uri: string;
+    id: string;
+    name: string;
+    progress: number;
+    uploaded: boolean;
+    uploading: boolean;
+    upload: boolean;
+    loaded: boolean;
+    file: any;
+    state: string;
 }
-
+export class PictureStates {
+    static Original: string;
+    static Copied: string;
+    static Changed: string;
+    static Deleted: string;
+    static Error: string;
+}
 
 export class PictureListEditItem {
     pin: number;
@@ -959,19 +976,36 @@ export class PictureUploadErrors {
 }
 
 
-export class AddImageOption {
-    Upload: boolean;
-    WebLink: boolean;
-    Camera: boolean;
-    Galery: boolean;
+export interface IPictureUrlDialogService {
+    show(successCallback?: (result: string) => void, cancelCallback?: () => void): any;
 }
 
-export class AddImageResult {
-    picture?: Attachment;
-    file?: any;
-    uriData?: any;
-    url?: string;
+const ConfigPictureUrlDialogTranslations: (pipTranslateProvider: pip.services.ITranslateProvider) => void;
+class PictureUrlDialogController {
+    private $log;
+    private $scope;
+    private $mdDialog;
+    private $rootScope;
+    private $timeout;
+    private $mdMenu;
+    private pipPictureUtils;
+    url: string;
+    invalid: boolean;
+    theme: string;
+    constructor($log: ng.ILogService, $scope: ng.IScope, $mdDialog: angular.material.IDialogService, $rootScope: ng.IRootScopeService, $timeout: ng.ITimeoutService, $mdMenu: any, pipPictureUtils: any);
+    setImageSize(img: any): void;
+    checkUrl(): void;
+    onCancelClick(): void;
+    onAddClick(): void;
 }
+
+
+function configAvatarResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+function configImageSetResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+
+function configPictureResources(pipRestProvider: pip.rest.IRestProvider): void;
 
 
 export class imageCssParams {
@@ -998,43 +1032,10 @@ export class PicturePaste {
 }
 
 
-function configAvatarResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-function configImageSetResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-
-function configPictureResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-export class PictureEditControl {
-    reset: (afterDeleting?: boolean) => void;
-    save: (successCallback?: (response?: Attachment) => void, errorCallback?: (error?: any) => void) => void;
-    abort: () => void;
-    error?: any;
-    disabled: boolean;
-    url: string;
-    uriData: any;
-    uri: string;
-    id: string;
-    name: string;
-    progress: number;
-    uploaded: boolean;
-    uploading: boolean;
-    upload: boolean;
-    loaded: boolean;
-    file: any;
-    state: string;
-}
-export class PictureStates {
-    static Original: string;
-    static Copied: string;
-    static Changed: string;
-    static Deleted: string;
-    static Error: string;
-}
-
 }
 
 declare module pip.documents {
+
 
 export class Attachment {
     constructor(id?: string, uri?: string, name?: string);
@@ -1077,7 +1078,6 @@ export interface IDocumentDataService {
 export interface IDocumentDataProvider extends ng.IServiceProvider {
     DocumentRoute: string;
 }
-
 
 
 
@@ -1156,6 +1156,7 @@ export class CompositeBlockTypes {
     static All: string[];
 }
 
+
 export class CompositeAddItemEventParams {
     type: string;
     id: string;
@@ -1168,7 +1169,6 @@ export class CompositeToolbarButton {
     checklist: boolean;
     text: boolean;
 }
-
 
 
 
@@ -1394,6 +1394,16 @@ export interface ITipsService {
 
 declare module pip.support {
 
+
+export interface IAnalyticsProvider extends ng.IServiceProvider {
+    enabled: boolean;
+    trackingId: string;
+    window: any;
+    enable(newTrackingId: string): boolean;
+    pageView(url: string, user: any, language: string): any;
+    event(category: string, action: string, value: string, user: any, language: string): any;
+}
+
 export class Attachment {
     constructor(id?: string, uri?: string, name?: string);
     id?: string;
@@ -1535,16 +1545,6 @@ export interface IFeedbackDialogService {
     show(params: any, successCallback?: (answer) => void, cancelCallback?: () => void): void;
 }
 
-
-
-export interface IAnalyticsProvider extends ng.IServiceProvider {
-    enabled: boolean;
-    trackingId: string;
-    window: any;
-    enable(newTrackingId: string): boolean;
-    pageView(url: string, user: any, language: string): any;
-    event(category: string, action: string, value: string, user: any, language: string): any;
-}
 
 function pipFeedbackDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
 
