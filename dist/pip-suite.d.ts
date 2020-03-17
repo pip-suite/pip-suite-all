@@ -38,6 +38,27 @@ export interface IAuthStateProvider extends ng.IServiceProvider {
 
 
 
+export interface IDataModelService {
+    execute(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    create(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    update(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    delete(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    read(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    readOne(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    page(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    uploadFiles(params: any, successCallback?: () => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    save(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    remove(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    query(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    get(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    readPage(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+    queryPage(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
+}
+export interface IDataModelProvider extends ng.IServiceProvider {
+}
+
+
+
 export class CacheParams {
     force?: boolean;
     resource?: string;
@@ -66,27 +87,6 @@ export interface IDataCacheService {
     decorateRemoveCallback(resource: string, params?: CacheParams, successCallback?: (data: any) => void): Function;
 }
 export interface IDataCacheProvider extends ng.IServiceProvider {
-}
-
-
-
-export interface IDataModelService {
-    execute(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    create(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    update(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    delete(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    read(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    readOne(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    page(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    uploadFiles(params: any, successCallback?: () => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    save(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    remove(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    query(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    get(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    readPage(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-    queryPage(params: any, successCallback?: (result: any) => void, errorCallback?: (error: any) => void): ng.IPromise<{}>;
-}
-export interface IDataModelProvider extends ng.IServiceProvider {
 }
 
 
@@ -160,6 +160,78 @@ export class ChangePasswordViewModel {
     onShowToast(message: any, type: any): void;
     onChange(callback?: () => void): void;
 }
+
+export class Account {
+    roles: string[];
+    theme: string;
+    language: string;
+    time_zone: string;
+    create_time: string;
+    change_pwd_time: string;
+    login: string;
+    name: string;
+    id: string;
+    custom_hdr?: any;
+    custom_dat?: any;
+    settings?: any;
+}
+
+export class EmailSettings {
+    name?: string;
+    email?: string;
+    language?: string;
+    verified?: boolean;
+    id?: string;
+}
+
+
+export class GENDER {
+    static MALE: 'male';
+    static FEMALE: 'female';
+    static NOT_SPECIFIED: 'n/s';
+}
+
+export interface IEntryDataService {
+    getUserId(): string;
+    signup(params: any, successCallback?: (user: SessionData) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    recoverPassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    resetPassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    expireChangePassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    requestEmailVerification(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    verifyEmail(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    signupValidate(login: string, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    saveSettingsKey(section: string, key: string, value: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+}
+
+
+export interface ISessionDataService {
+    getSessionId(): string;
+    getUserId(): string;
+    getSessions(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    restoreSession(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+    getUserSessions(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
+}
+
+export class Role {
+}
+
+export class Session {
+    user_id: string;
+    user_name: string;
+    address: string;
+    client: string;
+    request_time: string;
+    open_time: string;
+    active: boolean;
+    id: string;
+}
+
+export class SessionData extends Session {
+    user: Account;
+    data: any;
+    change_pwd_time?: string;
+}
+
 
 
 
@@ -306,78 +378,6 @@ export interface IEntryCommonService {
 function compareOldPassword($parse: ng.IParseService): ng.IDirective;
 function compareNewPassword($parse: ng.IParseService): ng.IDirective;
 function comparePasswordMatch($parse: ng.IParseService): ng.IDirective;
-
-export class Account {
-    roles: string[];
-    theme: string;
-    language: string;
-    time_zone: string;
-    create_time: string;
-    change_pwd_time: string;
-    login: string;
-    name: string;
-    id: string;
-    custom_hdr?: any;
-    custom_dat?: any;
-    settings?: any;
-}
-
-export class EmailSettings {
-    name?: string;
-    email?: string;
-    language?: string;
-    verified?: boolean;
-    id?: string;
-}
-
-
-export class GENDER {
-    static MALE: 'male';
-    static FEMALE: 'female';
-    static NOT_SPECIFIED: 'n/s';
-}
-
-export interface IEntryDataService {
-    getUserId(): string;
-    signup(params: any, successCallback?: (user: SessionData) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    recoverPassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    resetPassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    expireChangePassword(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    requestEmailVerification(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    verifyEmail(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    signupValidate(login: string, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    saveSettingsKey(section: string, key: string, value: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-}
-
-
-export interface ISessionDataService {
-    getSessionId(): string;
-    getUserId(): string;
-    getSessions(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    restoreSession(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-    getUserSessions(params: any, successCallback?: (data: any) => void, errorCallback?: (error: any) => void): angular.IPromise<any>;
-}
-
-export class Role {
-}
-
-export class Session {
-    user_id: string;
-    user_name: string;
-    address: string;
-    client: string;
-    request_time: string;
-    open_time: string;
-    active: boolean;
-    id: string;
-}
-
-export class SessionData extends Session {
-    user: Account;
-    data: any;
-    change_pwd_time?: string;
-}
-
 
 export class ExpireChangePasswordController {
     private pipExpireChangePasswordViewModel;
@@ -1358,6 +1358,20 @@ export class TipStatus {
 }
 
 
+function pipGuideDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
+
+
+function configQuoteResources(pipRestProvider: pip.rest.IRestProvider): void;
+
+function pipTipDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
+
+export interface IQuotesService {
+    filterQuotes(data: any[], topic: string): any[];
+    showQuotes(quotes: any[], ln: string, $event?: any): void;
+    waitUserTipsQuotes(tips: any[], quotes: any[], ln: string): void;
+}
+
+
 export interface IIntroGuidanceService {
     showReleaseGuidance(filter: string, successCallback?: () => void, errorCallback?: () => void): void;
     showIntroGuidance(filter: string, successCallback?: () => void, errorCallback?: () => void): void;
@@ -1367,20 +1381,6 @@ export interface IIntroGuidanceService {
 
 
 
-
-export interface IQuotesService {
-    filterQuotes(data: any[], topic: string): any[];
-    showQuotes(quotes: any[], ln: string, $event?: any): void;
-    waitUserTipsQuotes(tips: any[], quotes: any[], ln: string): void;
-}
-
-
-function pipGuideDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
-
-
-function configQuoteResources(pipRestProvider: pip.rest.IRestProvider): void;
-
-function pipTipDataConfig(pipRestProvider: pip.rest.IRestProvider): void;
 
 export interface ITipsService {
     filterTips(data: any[], topic: string): any[];
